@@ -5,7 +5,7 @@ from IPython.display import HTML
 import smtplib  # 发邮件
 from email.mime.text import MIMEText  # 用于构建内容文本
 from email.header import Header  # 用于构建邮件头
-
+# 备注信息
 text = psg.popup_get_text("请输入邮件内容：")
 if not text:
     psg.popup("操作中止！", "没有输入文字")
@@ -35,25 +35,30 @@ else:
             salary_description = str(salary)
 
             df = pd.DataFrame(forms1)
+            # 获取时间
+
+            # 邮件尾部署名
+            footer = (f'芜湖海立新能源-经营管理部 2023年7月10日')
+            # 工资明细主体
             html = df.to_html(header=False)
             # 将h5生成到文件
             text_file = open("index.html", "w")
             text_file.write(html)
             text_file.close()
             # 服务器，端口
-            host = 'smtp.qq.com'
+            host = 'smtp.qiye.163.com'
             port = 465
             # 我方账户，授权码
-            username = '283773655@qq.com'
-            password = 'exgfxskqmqvtbjdi'
+            username = 'payroll@highly-whnet.com'
+            password = 'KzZmzsd6ayPb6UeT'
             # 对方账户
             to_addr = [employee_email]  # 添加多个账户采用列表形式
             # 要发送的内容
-            moment = (f"Hi {employee_name} 您好！ 以下为 {salary_month} 月工资条" + html + text)
+            moment = (f"Hi {employee_name} 您好！ 以下为 {salary_month} 月工资明细，请查收~如有疑问请联系经营管理部[董敏]。br<>\n" + text + html + footer)
             # 构建纯文本的邮件内容
             msg = MIMEText(moment, 'html', 'utf-8')
             # 构建邮件头
-            msg['From'] = Header('283773655@qq.com')  # 发件人的名称或地址
+            msg['From'] = Header('payroll@highly-whnet.com')  # 发件人的名称或地址
             msg['To'] = Header(employee_email)  # to收件人邮箱地址
             msg['Subject'] = Header(f'{employee_name}<{salary_month}>月工资表')  # 主题
 
@@ -63,6 +68,8 @@ else:
             server.sendmail(username, to_addr, msg.as_string())  # 发送邮件
             server.quit()  # 关闭服务器
             print(f'[{employee_name}]{salary_month}月的薪资信息已发送至{mail_addr}')
-            psg.popup_notify(f'[{employee_name}]{salary_month}月的薪资信息已发送至{mail_addr}')
+            # psg.popup_notify(f'[{employee_name}]{salary_month}月的薪资信息已发送至{mail_addr}')
+            with open('./log.txt', 'a', encoding='UTF-8') as f:
+                f.write(f'[{employee_name}]{salary_month}月的薪资信息已发送至{mail_addr}')
         except Exception as e:
             print(e)
