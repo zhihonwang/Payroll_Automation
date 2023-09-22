@@ -1,7 +1,7 @@
 import PySimpleGUI as psg
 import openpyxl as op
 import pandas as pd
-from IPython.display import HTML
+# from IPython.display import HTML
 import smtplib  # 发邮件
 from email.mime.text import MIMEText  # 用于构建内容文本
 from email.header import Header  # 用于构建邮件头
